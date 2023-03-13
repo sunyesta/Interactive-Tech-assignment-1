@@ -26,7 +26,7 @@ void SprayConfigApp::setLevel(int level) {
                   "level must be btwn 1 and maxLevel");
     // data setting
     this->level = level;
-    appEnv->data->sprayDelay = (unsigned long)(this->level * 1000);
+    appEnv->data->sprayDelay = (unsigned long)(10000 + this->level * 1000);
 
     // text setting
     char levelTxt[level + 1];

@@ -33,8 +33,8 @@ void Lcd ::setLineText(int line, char* text, bool centered) {
 }
 void Lcd ::setText(char texts[2][17]) {
     assert_simple(texts, "must have text");
-    setLineText(0, texts[0], true);
-    setLineText(1, texts[1], true);
+    setLineText(0, texts[0], false);
+    setLineText(1, texts[1], false);
 }
 
 // TODO find error in this function

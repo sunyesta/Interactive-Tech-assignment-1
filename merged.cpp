@@ -96,6 +96,7 @@ class RGBLed;
 class SprayConfigApp;
 class TemperatureSensor;
 class MagnetSwitch;
+class IsOpenApp;
 
 enum class MachineState {
     isOpen,
@@ -112,7 +113,7 @@ class AppEnv {
    public:
     class Config {
        public:
-        static const int defaultSprayCount = 3;  // 2400;
+        static const int defaultSprayCount = 2400;
         static const int lcdRows = 2;
 
         // remember to add 1 for the null terminator if
@@ -149,6 +150,7 @@ class AppEnv {
         SprayConfigApp *sprayConfigApp;
         ForceSprayApp *forceSprayApp;
         ResetSpraysApp *resetSpraysApp;
+        IsOpenApp *isOpenApp;
     };
 
     class MiscComponents {
@@ -286,11 +288,14 @@ App::App() {
 }
 
 void App::onButtonPressed(AnalogButton* btn) {
-    Serial.println("button pressed (from App parent class)");
+    const char buff[] = "button pressed (from App parent class)";
+    Serial.println(buff);
 }
 
 void App::activate() {
-    Serial.println("WARNING: parent");
+    const char buff[] = "WARNING: parent";
+    Serial.println(buff);
+
     fireUpdate();
 }
 
@@ -431,7 +436,8 @@ class ForceSprayApp : public App, public Loopable {
 
     // this function should only be called by the AirFreshener
     void finishSpray() {
-        Serial.println("finished spray");
+        const char buff[] = "finished spray";
+        Serial.println(buff);
         appEnv->funcs->openDefaultApp();
     }
 
@@ -479,10 +485,7 @@ class InfoApp : public App {
     char *toString() { return "InfoApp"; }
 };
 
-InfoApp::InfoApp() : App() {
-    Serial.println("fun!!!");
-    setPage(PAGE_TEMP_SPRAY);
-}
+InfoApp::InfoApp() : App() { setPage(PAGE_MOT_DIS); }
 
 void InfoApp::activate() {
     appEnv->data->setMachineState(MachineState::notInUse);
@@ -591,7 +594,9 @@ void InfoApp::updateCurState(bool updateScreen) {
             case MachineState::useUnknown:
                 curState = "useUnknown";
                 break;
-
+            case MachineState::isOpen:
+                curState = "Open";
+                break;
             default:
                 curState = "ERROR STATE";
                 break;
@@ -814,7 +819,7 @@ void SprayConfigApp::setLevel(int level) {
                   "level must be btwn 1 and maxLevel");
     // data setting
     this->level = level;
-    appEnv->data->sprayDelay = (unsigned long)(this->level * 1000);
+    appEnv->data->sprayDelay = (unsigned long)(10000 + this->level * 1000);
 
     // text setting
     char levelTxt[level + 1];
@@ -848,6 +853,33 @@ void SprayConfigApp ::onButtonPressed(AnalogButton *btn) {
 
 #endif /* SPRAY_CONFIG_APP_HPP */
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/SprayConfigApp.hpp" end --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/isOpenApp.hpp" start --*/
+
+#ifndef IS_OPEN_APP_HPP
+#define IS_OPEN_APP_HPP
+
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Debounce.hpp" start --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Debounce.hpp" end --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.hpp" start --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.hpp" end --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/App.hpp" start --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/App.hpp" end --*/
+
+class IsOpenApp : public App {
+   public:
+    IsOpenApp() : App() {}
+
+    void activate() {
+        sprintf(texts[0], "Machine is");
+        sprintf(texts[1], "Open");
+        fireUpdate();
+    }
+
+    char *toString() { return "IsOpenApp"; }
+};
+
+#endif /* IS_OPEN_APP_HPP */
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/isOpenApp.hpp" end --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/AirFreshener.hpp" start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/AirFreshener.hpp" end --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/AnalogButton.hpp" start --*/
@@ -901,7 +933,9 @@ void DistanceSensor::loop() {
             wait10->start();
         } else if (wait10->isValidOnce()) {
             digitalWrite(trigPin, LOW);
+
             long duration = pulseIn(echoPin, HIGH);
+
             distance_cm = duration * 0.034 / 2;
             appEnv->data->distance = distance_cm;
             appEnv->apps->infoApp->updateDistance(true);
@@ -933,47 +967,31 @@ void DistanceSensor::loop() {
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/Lcd.hpp" end --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/MagnetSwitch.hpp" start --*/
 
-// #ifndef MAGNET_SWITCH_HPP
-// #define MAGNET_SWITCH_HPP
+#ifndef MAGNET_SWITCH_HPP
+#define MAGNET_SWITCH_HPP
 
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" end --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Debounce.hpp" start --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Debounce.hpp" end --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.hpp" start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.hpp" end --*/
 
-// class MagnetSwitch : public Loopable {
-//    private:
-//     Pin inputPin;
-//     DebounceTime time = 1000;
-//     Debounce *deb = new Debounce(&time);
+class MagnetSwitch : public Loopable {
+   private:
+    MachineState lastState = MachineState::triggeredSprayImminent;
+    Pin inputPin;
+    DebounceTime time = 1000;
+    Debounce *deb = new Debounce(&time);
+    bool ready = true;
 
-//    public:
-//     MagnetSwitch(Pin inputPin);
+   public:
+    MagnetSwitch(Pin inputPin);
 
-//     void loop();
-// };
+    void loop();
+};
 
-// MagnetSwitch::MagnetSwitch(Pin inputPin) : Loopable() {
-//     // Serial.println("created magnet switch!");
-//     this->inputPin = inputPin;
-//     // pinMode(inputPin, INPUT_PULLUP);
-//     deb->start();
-// }
-
-// void MagnetSwitch::loop() {
-//     if (deb->isValidOnce()) {
-//         Serial.println("created magnet switch!");
-//         deb->start();
-//     }
-//     // Serial.println("created magnet switch!");
-//     // int buttonState = digitalRead(inputPin);
-//     // if (buttonState == HIGH) {
-//     // } else if (buttonState == LOW) {
-//     //     // Serial.println("funnn!");
-//     // }
-// }
-
-// #endif /* MAGNET_SWITCH_HPP */
+#endif /* MAGNET_SWITCH_HPP */
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/MagnetSwitch.hpp" end --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/MotionSensor.hpp" start --*/
 
@@ -1021,7 +1039,6 @@ class RGBLed {
     Pin bPin;
     int r, g, b;
     DebounceTime time = 1;
-    Debounce *debounce1 = new Debounce(&time);
 
    public:
     RGBLed(Pin PinPWM_red, Pin PinPWM_green, Pin PinPWM_blue);
@@ -1040,8 +1057,6 @@ RGBLed::RGBLed(Pin PinPWM_red, Pin PinPWM_green, Pin PinPWM_blue) {
     pinMode(rPin, OUTPUT);
     pinMode(gPin, OUTPUT);
     pinMode(bPin, OUTPUT);
-
-    debounce1->start();
 }
 
 void RGBLed::setColor(int r, int g, int b) {
@@ -1079,7 +1094,7 @@ void RGBLed::setColorToState() {
             break;
 
         default:
-            setColor(0, 0, 0);  // off
+            setColor(100, 0, 0);  // off
             break;
     }
 }
@@ -1115,7 +1130,7 @@ class TemperatureSensor : public Loopable {
     void loop() {
         if (appEnv->funcs->isSensorsOn() && debounce->isValidOnce()) {
             int temperature = analogRead(pin);
-            float celcius = (float)temperature / 1023;
+            float celcius = (float)temperature / 1023 / 7;
             celcius = celcius * 5;
             celcius = celcius - 0.5;
             celcius = celcius * 100;
@@ -1140,10 +1155,7 @@ class TemperatureSensor : public Loopable {
 //   LCD_DB7 = 7;
 
 // NEW LCD
-const Pin LCD_RS = 2, LCD_E = 4, LCD_DB4 = 7, LCD_DB5 = 8, LCD_DB6 = 12,
-          LCD_DB7 = 13;
-
-const int lcdPins[]{LCD_RS, LCD_E, LCD_DB4, LCD_DB5, LCD_DB6, LCD_DB7};
+const int rs = 2, en = 4, d4 = 7, d5 = 8, d6 = 12, d7 = 13;
 
 const int spraysRemainingEEPROM = 0;
 
@@ -1155,14 +1167,14 @@ AppEnv::Data::Data() {
     distance = -1;
 
     // spraysRemaining from EEPROM
-    spraysRemaining = EEPROM.get(spraysRemainingEEPROM, spraysRemaining);
-    if (spraysRemaining == EEPROM_DEFAULT) {
-        spraysRemaining = appEnv->config->defaultSprayCount;
-        EEPROM.put(spraysRemainingEEPROM, spraysRemaining + EEPROM_OFFSET);
-    } else {
-        spraysRemaining -= EEPROM_OFFSET;
-    }
-
+    // spraysRemaining = EEPROM.get(spraysRemainingEEPROM, spraysRemaining);
+    // if (spraysRemaining == EEPROM_DEFAULT) {
+    //     spraysRemaining = appEnv->config->defaultSprayCount;
+    //     EEPROM.put(spraysRemainingEEPROM, spraysRemaining + EEPROM_OFFSET);
+    // } else {
+    //     spraysRemaining -= EEPROM_OFFSET;
+    // }
+    spraysRemaining = 2400;
     temperature = -1;
     sprayDelay = 1000;
 }
@@ -1171,6 +1183,9 @@ MachineState AppEnv::Data::machineState() { return _machineState; }
 void AppEnv::Data::setMachineState(MachineState machineState) {
     this->_machineState = machineState;
     appEnv->miscComponents->rgbLed->setColorToState();
+    if (appEnv->data->activeApp == appEnv->apps->infoApp) {
+        appEnv->apps->infoApp->updateCurState(true);
+    }
 }
 
 AppEnv ::Apps::Apps() {
@@ -1179,6 +1194,7 @@ AppEnv ::Apps::Apps() {
     this->sprayConfigApp = new SprayConfigApp();
     this->forceSprayApp = new ForceSprayApp();
     this->resetSpraysApp = new ResetSpraysApp();
+    this->isOpenApp = new IsOpenApp();
 }
 
 AppEnv ::Btns::Btns() {
@@ -1192,7 +1208,7 @@ AppEnv ::MiscComponents::MiscComponents() {
     this->distanceSensor = new DistanceSensor(9, 10);
     this->motionSensor = new MotionSensor(A1);
     this->rgbLed = new RGBLed(3, 6, 5);
-    // this->magnetSwitch = new MagnetSwitch(A2);  // put the pin back in
+    this->magnetSwitch = new MagnetSwitch(A3);  // put the pin back in
     // place
 }
 
@@ -1224,7 +1240,7 @@ void AppEnv::Funcs::setSpraysRemaining(int spraysRemaining) {
 AppEnv::AppEnv() {}
 
 void AppEnv ::setup() {
-    this->lcd = new Lcd(LCD_RS, LCD_E, LCD_DB4, LCD_DB5, LCD_DB6, LCD_DB7);
+    this->lcd = new Lcd(rs, en, d4, d5, d6, d7);
     this->config = new Config();
     this->data = new Data();
     this->apps = new Apps();
@@ -1333,8 +1349,8 @@ void Lcd ::setLineText(int line, char* text, bool centered) {
 }
 void Lcd ::setText(char texts[2][17]) {
     assert_simple(texts, "must have text");
-    setLineText(0, texts[0], true);
-    setLineText(1, texts[1], true);
+    setLineText(0, texts[0], false);
+    setLineText(1, texts[1], false);
 }
 
 // TODO find error in this function
@@ -1362,6 +1378,46 @@ void Lcd ::activateApp(T_App* app) {
 /*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/Lcd.cpp end --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/LiquidCrystal.h" start --*/
 
+/*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/MagnetSwitch.cpp start --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/MagnetSwitch.hpp" start --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/MagnetSwitch.hpp" end --*/
+
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" start --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" end --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Debounce.hpp" start --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Debounce.hpp" end --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.hpp" start --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.hpp" end --*/
+
+MagnetSwitch::MagnetSwitch(Pin inputPin) : Loopable() {
+    // const char buff[] = "created magnet switch";
+    // Serial.println(buff);
+
+    this->inputPin = inputPin;
+    pinMode(inputPin, INPUT);
+    deb->start();
+}
+
+void MagnetSwitch::loop() {
+    int buttonState = digitalRead(inputPin);
+    Serial.println(buttonState);
+    if (buttonState == HIGH && !ready) {
+        // const char buff[] = "magnet switch stopped!!";
+        // Serial.println(buff);
+        appEnv->data->setMachineState(lastState);
+        appEnv->lcd->activateApp(appEnv->apps->infoApp);
+        ready = true;
+    } else if (buttonState == LOW && ready) {
+        // const char buff[] = "magnet switch triggered!";
+        // Serial.println(buff);
+        lastState = appEnv->data->machineState();
+        appEnv->data->setMachineState(MachineState::isOpen);
+        appEnv->lcd->activateApp(appEnv->apps->isOpenApp);
+        ready = false;
+    }
+}
+
+/*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/MagnetSwitch.cpp end --*/
 /*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/MotionSensor.cpp start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/MotionSensor.hpp" start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/MotionSensor.hpp" end --*/
@@ -1424,7 +1480,7 @@ class Loopable;
 
 class LoopManager {
    private:
-    static const int maxLoopable = 10;
+    static const int maxLoopable = 20;
     int loopableCount = 0;
     Loopable *loopables[maxLoopable];
 
@@ -1462,7 +1518,10 @@ LoopManager *loopManager = new LoopManager();
 
 Loopable::Loopable() { index = loopManager->connect(this); }
 
-void Loopable::loop() { Serial.println("default loop function"); }
+void Loopable::loop() {
+    const char buff[] = "default loop function";
+    Serial.println(buff);
+}
 /*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.cpp end --*/
 /*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/main.cpp start --*/
 
@@ -1490,6 +1549,8 @@ void Loopable::loop() { Serial.println("default loop function"); }
 // resistorOhms
 class AnalogBtnSet : public Loopable {
    private:
+    DebounceTime dt = 100;
+    Debounce* debounceTemp = new Debounce(&dt);
     Pin pin;
     static const int btnCount = 3;
     int startingVolts;
@@ -1541,24 +1602,44 @@ AnalogBtnSet::AnalogBtnSet(AnalogButton* btns[], int btnCount, Pin analogPin,
     for (int i = 0; i < btnCount; i++) {
         this->btns[i] = btns[i];
     }
+    debounceTemp->start();
 }
 
 void AnalogBtnSet::loop() {
     int voltageInput = analogRead(this->pin);
+    // Serial.println(voltageInput);
+    if (debounceTemp->isValidOnce()) {
+        char buff[50];
+        sprintf(buff, "%d", voltageInput);
+        Serial.println(buff);
+        debounce->start();
+    }
 
     // no button pressed
-    if (voltageInput < getMaxVoltage(btnCount)) {
+    if (voltageInput < 100) {
         ready = true;
         return;
     }
     // btn that isn't 1st btn is pressed
-    for (int i = this->btnCount - 1; i >= 1; i--) {
-        if (voltageInput < getMaxVoltage(i)) {
-            triggerButton(this->btns[i]);
-            return;
-        }
-    }
+    // for (int i = this->btnCount - 1; i >= 1; i--) {
+    //     if (voltageInput < getMaxVoltage(i)) {
+    //         triggerButton(this->btns[i]);
+    //         return;
+    //     }
+    // }
 
+    if (voltageInput > 500 && voltageInput < 600) {
+        triggerButton(this->btns[0]);
+        return;
+    }
+    if (voltageInput > 300 && voltageInput < 400) {
+        triggerButton(this->btns[1]);
+        return;
+    }
+    if (voltageInput > 200 && voltageInput < 300) {
+        triggerButton(this->btns[2]);
+        return;
+    }
     triggerButton(this->btns[0]);
 }
 
@@ -1591,7 +1672,7 @@ void setup() {
     // loopManager = new LoopManager();
     AnalogButton *btns[] = {appEnv->btns->selectButton,
                             appEnv->btns->nextButton, appEnv->btns->manButton};
-    analogBtnSet = new AnalogBtnSet(btns, 3, A0, 5, 1);
+    analogBtnSet = new AnalogBtnSet(btns, 3, A0, 5, 10);
 
     appEnv->lcd->activateApp(appEnv->apps->infoApp);
 }
@@ -1599,6 +1680,7 @@ void setup() {
 void loop() {
     // analogBtnSet->loop();
     loopManager->loop();
+    // Serial.println("got here");
     // delay(200);
 }
 

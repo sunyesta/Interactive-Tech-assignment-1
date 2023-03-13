@@ -43,7 +43,9 @@ void DistanceSensor::loop() {
             wait10->start();
         } else if (wait10->isValidOnce()) {
             digitalWrite(trigPin, LOW);
+
             long duration = pulseIn(echoPin, HIGH);
+
             distance_cm = duration * 0.034 / 2;
             appEnv->data->distance = distance_cm;
             appEnv->apps->infoApp->updateDistance(true);

@@ -4,4 +4,7 @@
 
 Loopable::Loopable() { index = loopManager->connect(this); }
 
-void Loopable::loop() { Serial.println("default loop function"); }
+void Loopable::loop() {
+    const char buff[] = "default loop function";
+    Serial.println(buff);
+}

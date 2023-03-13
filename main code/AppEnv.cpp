@@ -8,6 +8,7 @@
 #include "./Apps/MainMenuApp.hpp"
 #include "./Apps/ResetSpraysApp.hpp"
 #include "./Apps/SprayConfigApp.hpp"
+#include "./Apps/isOpenApp.hpp"
 #include "./Components/AirFreshener.hpp"
 #include "./Components/AnalogButton.hpp"
 #include "./Components/DistanceSensor.hpp"
@@ -27,10 +28,7 @@
 //   LCD_DB7 = 7;
 
 // NEW LCD
-const Pin LCD_RS = 2, LCD_E = 4, LCD_DB4 = 7, LCD_DB5 = 8, LCD_DB6 = 12,
-          LCD_DB7 = 13;
-
-const int lcdPins[]{LCD_RS, LCD_E, LCD_DB4, LCD_DB5, LCD_DB6, LCD_DB7};
+const int rs = 2, en = 4, d4 = 7, d5 = 8, d6 = 12, d7 = 13;
 
 const int spraysRemainingEEPROM = 0;
 
@@ -42,14 +40,14 @@ AppEnv::Data::Data() {
     distance = -1;
 
     // spraysRemaining from EEPROM
-    spraysRemaining = EEPROM.get(spraysRemainingEEPROM, spraysRemaining);
-    if (spraysRemaining == EEPROM_DEFAULT) {
-        spraysRemaining = appEnv->config->defaultSprayCount;
-        EEPROM.put(spraysRemainingEEPROM, spraysRemaining + EEPROM_OFFSET);
-    } else {
-        spraysRemaining -= EEPROM_OFFSET;
-    }
-
+    // spraysRemaining = EEPROM.get(spraysRemainingEEPROM, spraysRemaining);
+    // if (spraysRemaining == EEPROM_DEFAULT) {
+    //     spraysRemaining = appEnv->config->defaultSprayCount;
+    //     EEPROM.put(spraysRemainingEEPROM, spraysRemaining + EEPROM_OFFSET);
+    // } else {
+    //     spraysRemaining -= EEPROM_OFFSET;
+    // }
+    spraysRemaining = 2400;
     temperature = -1;
     sprayDelay = 1000;
 }
@@ -58,6 +56,9 @@ MachineState AppEnv::Data::machineState() { return _machineState; }
 void AppEnv::Data::setMachineState(MachineState machineState) {
     this->_machineState = machineState;
     appEnv->miscComponents->rgbLed->setColorToState();
+    if (appEnv->data->activeApp == appEnv->apps->infoApp) {
+        appEnv->apps->infoApp->updateCurState(true);
+    }
 }
 
 AppEnv ::Apps::Apps() {
@@ -66,6 +67,7 @@ AppEnv ::Apps::Apps() {
     this->sprayConfigApp = new SprayConfigApp();
     this->forceSprayApp = new ForceSprayApp();
     this->resetSpraysApp = new ResetSpraysApp();
+    this->isOpenApp = new IsOpenApp();
 }
 
 AppEnv ::Btns::Btns() {
@@ -79,7 +81,7 @@ AppEnv ::MiscComponents::MiscComponents() {
     this->distanceSensor = new DistanceSensor(9, 10);
     this->motionSensor = new MotionSensor(A1);
     this->rgbLed = new RGBLed(3, 6, 5);
-    // this->magnetSwitch = new MagnetSwitch(A2);  // put the pin back in
+    this->magnetSwitch = new MagnetSwitch(A3);  // put the pin back in
     // place
 }
 
@@ -111,7 +113,7 @@ void AppEnv::Funcs::setSpraysRemaining(int spraysRemaining) {
 AppEnv::AppEnv() {}
 
 void AppEnv ::setup() {
-    this->lcd = new Lcd(LCD_RS, LCD_E, LCD_DB4, LCD_DB5, LCD_DB6, LCD_DB7);
+    this->lcd = new Lcd(rs, en, d4, d5, d6, d7);
     this->config = new Config();
     this->data = new Data();
     this->apps = new Apps();

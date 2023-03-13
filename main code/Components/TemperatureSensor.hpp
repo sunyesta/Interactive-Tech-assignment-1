@@ -23,7 +23,7 @@ class TemperatureSensor : public Loopable {
     void loop() {
         if (appEnv->funcs->isSensorsOn() && debounce->isValidOnce()) {
             int temperature = analogRead(pin);
-            float celcius = (float)temperature / 1023;
+            float celcius = (float)temperature / 1023 / 7;
             celcius = celcius * 5;
             celcius = celcius - 0.5;
             celcius = celcius * 100;

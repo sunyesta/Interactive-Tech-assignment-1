@@ -15,7 +15,6 @@ class RGBLed {
     Pin bPin;
     int r, g, b;
     DebounceTime time = 1;
-    Debounce *debounce1 = new Debounce(&time);
 
    public:
     RGBLed(Pin PinPWM_red, Pin PinPWM_green, Pin PinPWM_blue);
@@ -34,8 +33,6 @@ RGBLed::RGBLed(Pin PinPWM_red, Pin PinPWM_green, Pin PinPWM_blue) {
     pinMode(rPin, OUTPUT);
     pinMode(gPin, OUTPUT);
     pinMode(bPin, OUTPUT);
-
-    debounce1->start();
 }
 
 void RGBLed::setColor(int r, int g, int b) {
@@ -73,7 +70,7 @@ void RGBLed::setColorToState() {
             break;
 
         default:
-            setColor(0, 0, 0);  // off
+            setColor(100, 0, 0);  // off
             break;
     }
 }

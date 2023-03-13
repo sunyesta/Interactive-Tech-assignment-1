@@ -22,6 +22,7 @@ class RGBLed;
 class SprayConfigApp;
 class TemperatureSensor;
 class MagnetSwitch;
+class IsOpenApp;
 
 enum class MachineState {
     isOpen,
@@ -38,7 +39,7 @@ class AppEnv {
    public:
     class Config {
        public:
-        static const int defaultSprayCount = 3;  // 2400;
+        static const int defaultSprayCount = 2400;
         static const int lcdRows = 2;
 
         // remember to add 1 for the null terminator if
@@ -75,6 +76,7 @@ class AppEnv {
         SprayConfigApp *sprayConfigApp;
         ForceSprayApp *forceSprayApp;
         ResetSpraysApp *resetSpraysApp;
+        IsOpenApp *isOpenApp;
     };
 
     class MiscComponents {

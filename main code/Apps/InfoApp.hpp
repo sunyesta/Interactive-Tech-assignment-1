@@ -33,10 +33,7 @@ class InfoApp : public App {
     char *toString() { return "InfoApp"; }
 };
 
-InfoApp::InfoApp() : App() {
-    Serial.println("fun!!!");
-    setPage(PAGE_TEMP_SPRAY);
-}
+InfoApp::InfoApp() : App() { setPage(PAGE_MOT_DIS); }
 
 void InfoApp::activate() {
     appEnv->data->setMachineState(MachineState::notInUse);
@@ -145,7 +142,9 @@ void InfoApp::updateCurState(bool updateScreen) {
             case MachineState::useUnknown:
                 curState = "useUnknown";
                 break;
-
+            case MachineState::isOpen:
+                curState = "Open";
+                break;
             default:
                 curState = "ERROR STATE";
                 break;

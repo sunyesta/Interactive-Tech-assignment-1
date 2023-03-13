@@ -10,7 +10,7 @@ class Loopable;
 
 class LoopManager {
    private:
-    static const int maxLoopable = 10;
+    static const int maxLoopable = 20;
     int loopableCount = 0;
     Loopable *loopables[maxLoopable];
 

@@ -39,7 +39,8 @@ class ForceSprayApp : public App, public Loopable {
 
     // this function should only be called by the AirFreshener
     void finishSpray() {
-        Serial.println("finished spray");
+        const char buff[] = "finished spray";
+        Serial.println(buff);
         appEnv->funcs->openDefaultApp();
     }
 

@@ -22,7 +22,7 @@ void setup() {
     // loopManager = new LoopManager();
     AnalogButton *btns[] = {appEnv->btns->selectButton,
                             appEnv->btns->nextButton, appEnv->btns->manButton};
-    analogBtnSet = new AnalogBtnSet(btns, 3, A0, 5, 1);
+    analogBtnSet = new AnalogBtnSet(btns, 3, A0, 5, 10);
 
     appEnv->lcd->activateApp(appEnv->apps->infoApp);
 }
@@ -30,5 +30,6 @@ void setup() {
 void loop() {
     // analogBtnSet->loop();
     loopManager->loop();
+    // Serial.println("got here");
     // delay(200);
 }

@@ -31,11 +31,14 @@ App::App() {
 }
 
 void App::onButtonPressed(AnalogButton* btn) {
-    Serial.println("button pressed (from App parent class)");
+    const char buff[] = "button pressed (from App parent class)";
+    Serial.println(buff);
 }
 
 void App::activate() {
-    Serial.println("WARNING: parent");
+    const char buff[] = "WARNING: parent";
+    Serial.println(buff);
+
     fireUpdate();
 }
 

@@ -14,6 +14,8 @@
 // resistorOhms
 class AnalogBtnSet : public Loopable {
    private:
+    DebounceTime dt = 100;
+    Debounce* debounceTemp = new Debounce(&dt);
     Pin pin;
     static const int btnCount = 3;
     int startingVolts;
@@ -65,24 +67,44 @@ AnalogBtnSet::AnalogBtnSet(AnalogButton* btns[], int btnCount, Pin analogPin,
     for (int i = 0; i < btnCount; i++) {
         this->btns[i] = btns[i];
     }
+    debounceTemp->start();
 }
 
 void AnalogBtnSet::loop() {
     int voltageInput = analogRead(this->pin);
+    // Serial.println(voltageInput);
+    if (debounceTemp->isValidOnce()) {
+        char buff[50];
+        sprintf(buff, "%d", voltageInput);
+        Serial.println(buff);
+        debounce->start();
+    }
 
     // no button pressed
-    if (voltageInput < getMaxVoltage(btnCount)) {
+    if (voltageInput < 100) {
         ready = true;
         return;
     }
     // btn that isn't 1st btn is pressed
-    for (int i = this->btnCount - 1; i >= 1; i--) {
-        if (voltageInput < getMaxVoltage(i)) {
-            triggerButton(this->btns[i]);
-            return;
-        }
-    }
+    // for (int i = this->btnCount - 1; i >= 1; i--) {
+    //     if (voltageInput < getMaxVoltage(i)) {
+    //         triggerButton(this->btns[i]);
+    //         return;
+    //     }
+    // }
 
+    if (voltageInput > 500 && voltageInput < 600) {
+        triggerButton(this->btns[0]);
+        return;
+    }
+    if (voltageInput > 300 && voltageInput < 400) {
+        triggerButton(this->btns[1]);
+        return;
+    }
+    if (voltageInput > 200 && voltageInput < 300) {
+        triggerButton(this->btns[2]);
+        return;
+    }
     triggerButton(this->btns[0]);
 }
 
