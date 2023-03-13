@@ -9,8 +9,21 @@
 // #ifndef NO_ERRORS_HPP
 // #define NO_ERRORS_HPP
 
-// #define NULL 0
+// #define uint8_t int
+
 // #define A0 0
+// #define A1 0
+// #define A2 0
+// #define A3 0
+// #define A4 0
+// #define A5 0
+// #define A6 0
+
+// #define NULL 0
+// #define OUTPUT 0
+// #define INPUT 0
+// #define HIGH 0
+// #define LOW 0
 
 // #include <iostream>
 // using namespace std;
@@ -41,7 +54,27 @@
 
 // SerialObj Serial;
 
+// void pinMode(uint8_t pin, int type) {}
+
+// void digitalWrite(uint8_t pin, int mode) {}
+
+// int digitalRead(int pin) {}
+
+// int millis() {}
+
 // int main() {}
+
+// int pulseIn(uint8_t pin, int out) {}
+
+// int analogWrite(int pin, int out) {}
+
+// class EEPROM_class {
+//    public:
+//     int get(int x, int y){};
+//     int put(int x, int y){};
+// };
+
+// EEPROM_class EEPROM;
 
 // #endif /* NO_ERRORS_HPP */
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/NoErrors.hpp" end --*/
@@ -169,7 +202,7 @@ AppEnv *appEnv;
 
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" end --*/
 
-// #include <EEPROM.h>
+#include <EEPROM.h>
 
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/App.hpp" start --*/
 
@@ -182,11 +215,6 @@ AppEnv *appEnv;
 
 #ifndef ANALOG_BUTTON_HPP
 #define ANALOG_BUTTON_HPP
-
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" end --*/
-
-// class App;
 
 class AnalogButton {
    public:
@@ -205,6 +233,8 @@ class AnalogButton {
 
 class LiquidCrystal;
 
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" start --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" end --*/
 class App;
 
 class Lcd {
@@ -219,10 +249,10 @@ class Lcd {
     Lcd(Pin rs, Pin e, Pin db4, Pin db5, Pin db6, Pin db7);
 
     void setLineText(int line, char* text, bool centered);
-    void setText(char* texts[]);
+    void setText(char texts[2][17]);
     // TODO find error in this function
     template <typename T_App>
-    void update(T_App* app, char* texts[]);
+    void update(T_App* app, char texts[2][17]);
 
     template <typename T_App>
     void activateApp(T_App* app);
@@ -230,117 +260,13 @@ class Lcd {
 
 #endif /* LCD_HPP */
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/Lcd.hpp" end --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/StringUtils.hpp" start --*/
-
-#ifndef STRING_UTILS_CPP
-#define STRING_UTILS_CPP
-
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Assert.hpp" start --*/
-
-
-#ifndef ASSERT_HPP
-#define ASSERT_HPP
-
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/NoErrors.hpp" start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/NoErrors.hpp" end --*/
-
-void printErr() { Serial.print("ERROR: "); }
-
-void assert_simple(bool val, char *message) {
-    if (!val) {
-        printErr();
-        Serial.println(message);
-        delay(100);
-        exit(-1);
-    }
-}
-
-void assert_str(bool val, char *message, char *actual) {
-    if (!val) {
-        printErr();
-        Serial.println(message);
-        Serial.print("actual: ");
-        Serial.println(actual);
-        delay(100);
-        exit(-1);
-    }
-}
-
-// template <typename T>
-// void assert_val(bool val, char *message, T actual) {
-//     if (!val) {
-//         printErr();
-//         Serial.println(message);
-//         Serial.print("actual: ");
-//         Serial.println(actual);
-//         delay(100);
-//         exit(-1);
-//     }
-// }
-
-void assert_int(bool val, char *message, int actual) {
-    if (!val) {
-        printErr();
-        Serial.println(message);
-        Serial.print("actual: ");
-        Serial.println(actual);
-        delay(100);
-        exit(-1);
-    }
-}
-
-#endif /* ASSERT_HPP */
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Assert.hpp" end --*/
-
-bool string_cpy(char **pointer, char *string_to_cpy) {
-    // makes sure the memory adress of the string is not NULL
-    assert_simple(pointer, "pointer must not be NULL");
-
-    // check if string needs to be copied
-    if (string_to_cpy == NULL) {
-        *pointer = NULL;
-
-        // copies the string
-    } else {
-        // allocates space for the new string
-        *pointer = (char *)malloc(strlen(string_to_cpy) * sizeof(char) + 1);
-
-        // if allocating space failed, return false to show that it was not
-        // successful
-        if (*pointer == NULL) {
-            return false;
-        }
-
-        // copy the string character by character into *pointer
-        strcpy(*pointer, string_to_cpy);
-    }
-
-    // copying the string was successful
-    return true;
-}
-
-#endif /* STRING_UTILS_CPP */
-
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/StringUtils.hpp" end --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/NoErrors.hpp" start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/NoErrors.hpp" end --*/
-
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Temp.hpp" start --*/
-
-#ifndef TEMP_HPP
-#define TEMP_HPP
-
-class Temp {
-   public:
-};
-
-#endif /* TEMP_HPP */
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Temp.hpp" end --*/
 
 class App {
    protected:
-    char* texts[2];
-    void fireUpdate() { appEnv->lcd->update(this, texts); }
+    char texts[2][17];
+    void fireUpdate();
 
    public:
     App();
@@ -350,10 +276,13 @@ class App {
     virtual char* toString();
     virtual void onButtonPressed(AnalogButton* btn);
 };
+// protected
+void App::fireUpdate() { appEnv->lcd->update(this, texts); }
 
+// public
 App::App() {
-    string_cpy(&texts[0], "sixteen chars==1");
-    string_cpy(&texts[1], "sixteen chars==2");
+    sprintf(texts[0], "sixteen chars==1");
+    sprintf(texts[1], "sixteen chars==2");
 }
 
 void App::onButtonPressed(AnalogButton* btn) {
@@ -381,6 +310,8 @@ char* App::toString() { return "Default app"; }
 #ifndef AIR_FRESHENER_HPP
 #define AIR_FRESHENER_HPP
 
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" start --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" end --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.hpp" start --*/
 
 #ifndef LOOPABLE_HPP
@@ -397,6 +328,7 @@ class Loopable {
 
 #endif /* LOOPABLE_HPP */
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.hpp" end --*/
+
 class Debounce;
 
 class AirFreshener : public Loopable {
@@ -682,8 +614,6 @@ void InfoApp::updateCurState(bool updateScreen) {
 
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/AnalogButton.hpp" start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/AnalogButton.hpp" end --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/StringUtils.hpp" start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/StringUtils.hpp" end --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/App.hpp" start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/App.hpp" end --*/
 
@@ -695,8 +625,6 @@ class MainMenuApp : public App {
         void (*callback)();
 
         Option(char *text, void (*callbackFunc)()) {
-            //
-            // string_cpy(&(this->text), text);
             sprintf(this->text, "%s", text);
 
             this->callback = callback;
@@ -707,7 +635,7 @@ class MainMenuApp : public App {
 
     int itemIndex = 0;
     static const int optionCount = 4;
-    char *options[4];
+    char options[4][12];
 
     void displayMenuItem(char *op);
 
@@ -720,10 +648,10 @@ class MainMenuApp : public App {
 };
 
 MainMenuApp::MainMenuApp() : App() {
-    string_cpy(&options[0], "info app");
-    string_cpy(&options[1], "spray mode");
-    string_cpy(&options[2], "spray");
-    string_cpy(&options[3], "reset");
+    sprintf(options[0], "info app");
+    sprintf(options[1], "spray mode");
+    sprintf(options[2], "spray");
+    sprintf(options[3], "reset");
 }
 
 void MainMenuApp::displayMenuItem(char *op) { sprintf(texts[0], "%s", op); };
@@ -810,6 +738,60 @@ class ResetSpraysApp : public App, public Loopable {
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" end --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Assert.hpp" start --*/
+
+
+#ifndef ASSERT_HPP
+#define ASSERT_HPP
+
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/NoErrors.hpp" start --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/NoErrors.hpp" end --*/
+
+void printErr() { Serial.print("ERROR: "); }
+
+void assert_simple(bool val, char *message) {
+    if (!val) {
+        printErr();
+        Serial.println(message);
+        delay(100);
+        exit(-1);
+    }
+}
+
+void assert_str(bool val, char *message, char *actual) {
+    if (!val) {
+        printErr();
+        Serial.println(message);
+        Serial.print("actual: ");
+        Serial.println(actual);
+        delay(100);
+        exit(-1);
+    }
+}
+
+// template <typename T>
+// void assert_val(bool val, char *message, T actual) {
+//     if (!val) {
+//         printErr();
+//         Serial.println(message);
+//         Serial.print("actual: ");
+//         Serial.println(actual);
+//         delay(100);
+//         exit(-1);
+//     }
+// }
+
+void assert_int(bool val, char *message, int actual) {
+    if (!val) {
+        printErr();
+        Serial.println(message);
+        Serial.print("actual: ");
+        Serial.println(actual);
+        delay(100);
+        exit(-1);
+    }
+}
+
+#endif /* ASSERT_HPP */
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Assert.hpp" end --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/App.hpp" start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/App.hpp" end --*/
@@ -894,56 +876,56 @@ class DistanceSensor : Loopable {
     bool looped = true;
 
    public:
-    DistanceSensor(Pin echoPin, Pin trigPin) {
-        this->echoPin = echoPin;
-        this->trigPin = trigPin;
-        pinMode(trigPin, OUTPUT);
-        pinMode(echoPin, INPUT);
+    DistanceSensor(Pin echoPin, Pin trigPin);
 
-        debounce->start();
-    }
-
-    void loop() {
-        // TODO make a replacment for loopable that updates all sensors every 2
-        // secs
-        if (appEnv->funcs->isSensorsOn()) {  // TODO make sure to handle
-                                             // currently running debounces
-
-            // TODO add debounce with isValid not isValidOnce
-            if (debounce->isValidOnce()) {
-                digitalWrite(trigPin, LOW);
-                wait2->start();
-            }
-
-            if (wait2->isValidOnce()) {
-                digitalWrite(trigPin, HIGH);
-                wait10->start();
-            }
-            if (wait10->isValidOnce()) {
-                digitalWrite(trigPin, LOW);
-                long duration = pulseIn(echoPin, HIGH);
-                distance_cm = duration * 0.034 / 2;
-                appEnv->data->distance = distance_cm;
-                appEnv->apps->infoApp->updateDistance(true);
-                debounce->start();
-            }
-        }
-
-        // SLOW WAY
-        //  digitalWrite(trigPin, LOW);
-        //  delayMicroseconds(2);
-        //  digitalWrite(trigPin, HIGH);
-        //  delayMicroseconds(10);
-        //  digitalWrite(trigPin, LOW);
-
-        // long duration = pulseIn(echoPin, HIGH);
-        // distance_cm = duration * 0.034 / 2;
-        // appEnv->data->distance = distance_cm;
-        // Serial.println(distance_cm);
-        // appEnv->apps->infoApp->updateDistance(true);
-        // END SLOW WAY
-    }
+    void loop();
 };
+
+// public
+DistanceSensor::DistanceSensor(Pin echoPin, Pin trigPin) : Loopable() {
+    this->echoPin = echoPin;
+    this->trigPin = trigPin;
+    pinMode(trigPin, OUTPUT);
+    pinMode(echoPin, INPUT);
+
+    debounce->start();
+}
+
+void DistanceSensor::loop() {
+    if (appEnv->funcs->isSensorsOn()) {
+        if (debounce->isValidOnce()) {
+            digitalWrite(trigPin, LOW);
+            wait2->start();
+        } else if (wait2->isValidOnce()) {
+            digitalWrite(trigPin, HIGH);
+            wait10->start();
+        } else if (wait10->isValidOnce()) {
+            digitalWrite(trigPin, LOW);
+            long duration = pulseIn(echoPin, HIGH);
+            distance_cm = duration * 0.034 / 2;
+            appEnv->data->distance = distance_cm;
+            appEnv->apps->infoApp->updateDistance(true);
+            debounce->start();
+        }
+    } else {
+        debounce->start();  // restarts debounce sequence;
+    }
+
+    // SLOW WAY
+    //  digitalWrite(trigPin, LOW);
+    //  delayMicroseconds(2);
+    //  digitalWrite(trigPin, HIGH);
+    //  delayMicroseconds(10);
+    //  digitalWrite(trigPin, LOW);
+
+    // long duration = pulseIn(echoPin, HIGH);
+    // distance_cm = duration * 0.034 / 2;
+    // appEnv->data->distance = distance_cm;
+    // Serial.println(distance_cm);
+    // appEnv->apps->infoApp->updateDistance(true);
+    // END SLOW WAY
+}
+// private
 
 #endif /* DISTANCE_SENSOR_HPP */
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/DistanceSensor.hpp" end --*/
@@ -1011,11 +993,7 @@ class MotionSensor : public Loopable {
     Pin pin;
     MotionSensor(Pin pin);
 
-    void loop() {
-        // if (appEnv->funcs->isSensorsOn()) {
-        //     updateMotion();
-        // }
-    }
+    void loop();
 
     void updateMotion();
 };
@@ -1027,45 +1005,16 @@ class MotionSensor : public Loopable {
 #ifndef RGB_LED_HPP
 #define RGB_LED_HPP
 
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" start --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" end --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Debounce.hpp" start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Debounce.hpp" end --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Packages/ColorUtils.hpp" start --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.hpp" start --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.hpp" end --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/NoErrors.hpp" start --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/NoErrors.hpp" end --*/
 
-
-#ifndef COLOR_UTILS_HPP
-#define COLOR_UTILS_HPP
-
-// SRC: https://www.programmingalgorithms.com/algorithm/hsl-to-rgb/cpp/
-
-class RGB {
-   public:
-    unsigned char R;
-    unsigned char G;
-    unsigned char B;
-
-    RGB(unsigned char r, unsigned char g, unsigned char b);
-
-    bool Equals(RGB rgb);
-};
-
-class HSL {
-   public:
-    int H;
-    float S;
-    float L;
-
-    HSL(int h, float s, float l);
-    bool Equals(HSL hsl);
-};
-
-static float HueToRGB(float v1, float v2, float vH);
-
-static RGB HSLToRGB(HSL hsl);
-
-#endif /* COLOR_UTILS_HPP */
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Packages/ColorUtils.hpp" end --*/
-
-class RGBLed : public Loopable {
+class RGBLed {
    private:
     Pin rPin;
     Pin gPin;
@@ -1075,78 +1024,24 @@ class RGBLed : public Loopable {
     Debounce *debounce1 = new Debounce(&time);
 
    public:
-    RGBLed(Pin PinPWM_red, Pin PinPWM_green, Pin PinPWM_blue) {
-        this->rPin = PinPWM_red;
-        this->gPin = PinPWM_green;
-        this->bPin = PinPWM_blue;
+    RGBLed(Pin PinPWM_red, Pin PinPWM_green, Pin PinPWM_blue);
 
-        pinMode(rPin, OUTPUT);
-        pinMode(gPin, OUTPUT);
-        pinMode(bPin, OUTPUT);
-
-        debounce1->start();
-    }
-
-    void setColor(RGB color);
     void setColor(int r, int g, int b);
     // need to be put in loop
 
-    void rainbow() {
-        static int hue;
-        if (debounce1->isValidOnce()) {
-            if (hue < 255) {
-                // Serial.println("updating color");
-                hue++;
-                setColor(HSLToRGB(HSL(hue, 1, .5)));
-
-            } else if (hue >= 255) {
-                hue = 0;
-            }
-            debounce1->start();
-        }
-    }
-
-    void setColorToState() {
-        switch (appEnv->data->machineState()) {
-            case MachineState::menuInUse:
-                setColor(0, 0, 255);  // dark blue
-                break;
-            case MachineState::notInUse:
-                setColor(255, 255, 255);  // white
-                break;
-            case MachineState::triggeredSprayImminent:
-                setColor(255, 0, 0);  // red
-                break;
-            case MachineState::useCleaning:
-                setColor(255, 255, 0);  // yellow
-                break;
-            case MachineState::useNum1:
-                setColor(0, 255, 0);  // green
-                break;
-            case MachineState::useNum2:
-                setColor(255, 0, 255);  // purple
-                break;
-            case MachineState::useUnknown:
-                setColor(255, 115, 0);  // cyan
-                break;
-
-            default:
-                setColor(0, 0, 0);  // off
-                break;
-        }
-    }
-    void loop() {
-        // rainbow();
-        // char buff[50];
-        // sprintf(buff, "rgb = %d, %d, %d", r, g, b);
-        // Serial.println(buff);
-    }
+    void setColorToState();
 };
 
-void RGBLed::setColor(RGB color) {
-    analogWrite(rPin, color.R);
-    analogWrite(gPin, color.G);
-    analogWrite(bPin, color.B);
+RGBLed::RGBLed(Pin PinPWM_red, Pin PinPWM_green, Pin PinPWM_blue) {
+    this->rPin = PinPWM_red;
+    this->gPin = PinPWM_green;
+    this->bPin = PinPWM_blue;
+
+    pinMode(rPin, OUTPUT);
+    pinMode(gPin, OUTPUT);
+    pinMode(bPin, OUTPUT);
+
+    debounce1->start();
 }
 
 void RGBLed::setColor(int r, int g, int b) {
@@ -1159,6 +1054,36 @@ void RGBLed::setColor(int r, int g, int b) {
     this->b = b;
 }
 
+void RGBLed::setColorToState() {
+    switch (appEnv->data->machineState()) {
+        case MachineState::menuInUse:
+            setColor(0, 0, 255);  // dark blue
+            break;
+        case MachineState::notInUse:
+            setColor(255, 255, 255);  // white
+            break;
+        case MachineState::triggeredSprayImminent:
+            setColor(255, 0, 0);  // red
+            break;
+        case MachineState::useCleaning:
+            setColor(255, 255, 0);  // yellow
+            break;
+        case MachineState::useNum1:
+            setColor(0, 255, 0);  // green
+            break;
+        case MachineState::useNum2:
+            setColor(255, 0, 255);  // purple
+            break;
+        case MachineState::useUnknown:
+            setColor(255, 115, 0);  // cyan
+            break;
+
+        default:
+            setColor(0, 0, 0);  // off
+            break;
+    }
+}
+
 #endif /* RGB_LED_HPP */
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/RGBLed.hpp" end --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/TemperatureSensor.hpp" start --*/
@@ -1168,6 +1093,8 @@ void RGBLed::setColor(int r, int g, int b) {
 
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" end --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/InfoApp.hpp" start --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/InfoApp.hpp" end --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Debounce.hpp" start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Debounce.hpp" end --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.hpp" start --*/
@@ -1181,7 +1108,7 @@ class TemperatureSensor : public Loopable {
 
    public:
     TemperatureSensor(Pin analogPin) : Loopable() {
-        //
+        // Serial.println("testingaaaaaaaaaaaaaaaaaaaaaaaaa");
         this->pin = analogPin;
         debounce->start();
     }
@@ -1195,7 +1122,6 @@ class TemperatureSensor : public Loopable {
 
             appEnv->data->temperature = celcius;
             appEnv->apps->infoApp->updateTemperature(true);
-            // Serial.println(celcius);
             debounce->start();
         }
     }
@@ -1203,146 +1129,6 @@ class TemperatureSensor : public Loopable {
 
 #endif /* TEMPERATURE_SENSO_HPP */
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/TemperatureSensor.hpp" end --*/
-
-// #define EEPROM_DEFAULT 0
-
-// // We use 5000 because it is impossible for spraysRemaining to = 5000
-// #define EEPROM_OFFSET 5000
-
-// // LCD display
-// const Pin LCD_RS = 11, LCD_E = 12, LCD_DB4 = 4, LCD_DB5 = A5, LCD_DB6 = 13,
-//           LCD_DB7 = 7;
-
-// // NEW LCD
-// // const Pin LCD_RS = 8, LCD_E = 9, LCD_DB4 = 10, LCD_DB5 = 11, LCD_DB6 = 12,
-// //           LCD_DB7 = 13;
-
-// const int lcdPins[]{LCD_RS, LCD_E, LCD_DB4, LCD_DB5, LCD_DB6, LCD_DB7};
-
-// const int spraysRemainingEEPROM = 0;
-
-// AppEnv::Data::Data() {
-//     activeApp = NULL;
-//     defaultApp = NULL;
-//     setMachineState(MachineState::notInUse);
-//     hasMotion = false;
-//     distance = -1;
-
-//     // spraysRemaining from EEPROM
-//     spraysRemaining = EEPROM.get(spraysRemainingEEPROM, spraysRemaining);
-//     if (spraysRemaining == EEPROM_DEFAULT) {
-//         spraysRemaining = appEnv->config->defaultSprayCount;
-//         EEPROM.put(spraysRemainingEEPROM, spraysRemaining + EEPROM_OFFSET);
-//     } else {
-//         spraysRemaining -= EEPROM_OFFSET;
-//     }
-
-//     temperature = -1;
-//     sprayDelay = 1000;
-// }
-// MachineState AppEnv::Data::machineState() { return _machineState; }
-
-// void AppEnv::Data::setMachineState(MachineState machineState) {
-//     this->_machineState = machineState;
-//     appEnv->miscComponents->rgbLed->setColorToState();
-// }
-
-// AppEnv ::Apps::Apps() {
-//     this->infoApp = new InfoApp();
-//     this->mainMenuApp = new MainMenuApp();
-//     this->sprayConfigApp = new SprayConfigApp();
-//     this->forceSprayApp = new ForceSprayApp();
-//     this->resetSpraysApp = new ResetSpraysApp();
-// }
-
-// AppEnv ::Btns::Btns() {
-//     this->selectButton = new AnalogButton();
-//     this->nextButton = new AnalogButton();
-// }
-
-// AppEnv ::MiscComponents::MiscComponents() {
-//     this->airFreshener = new AirFreshener(8);
-//     this->temperatureSensor = new TemperatureSensor(A1);
-//     this->distanceSensor = new DistanceSensor(10, 9);
-//     this->motionSensor = new MotionSensor(2);
-//     this->rgbLed = new RGBLed(6, 3, 5);
-//     // this->magnetSwitch = new MagnetSwitch(A2);  // put the pin back in
-//     // place
-// }
-
-// AppEnv ::Funcs::Funcs() {}
-
-// void AppEnv ::Funcs::openSelectionMenu() {
-//     appEnv->lcd->activateApp(appEnv->apps->mainMenuApp);
-// }
-
-// void AppEnv ::Funcs::openDefaultApp() {
-//     appEnv->lcd->activateApp(appEnv->data->defaultApp);
-// }
-
-// bool AppEnv ::Funcs::isSensorsOn() {
-//     return appEnv->data->machineState() == MachineState::notInUse ||
-//            appEnv->data->machineState() == MachineState::useUnknown;
-//     // return true;
-// }
-
-// void AppEnv::Funcs::setMotion(bool hasMotion) {
-//     appEnv->data->hasMotion = hasMotion;
-// }
-
-// void AppEnv::Funcs::setSpraysRemaining(int spraysRemaining) {
-//     appEnv->data->spraysRemaining = spraysRemaining;
-//     EEPROM.put(spraysRemainingEEPROM, spraysRemaining + EEPROM_OFFSET);
-// }
-
-// AppEnv::AppEnv() {}
-
-// void AppEnv ::setup() {
-//     this->lcd = new Lcd(LCD_RS, LCD_E, LCD_DB4, LCD_DB5, LCD_DB6, LCD_DB7);
-//     this->config = new Config();
-//     this->data = new Data();
-//     this->apps = new Apps();
-//     this->btns = new Btns();
-//     this->miscComponents = new MiscComponents();
-//     this->funcs = new Funcs();
-
-//     this->data->defaultApp = this->apps->infoApp;
-// }
-
-/*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.cpp end --*/
-/*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv2.cpp start --*/
-#include <EEPROM.h>
-
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/App.hpp" start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/App.hpp" end --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/ForceSprayApp.hpp" start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/ForceSprayApp.hpp" end --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/InfoApp.hpp" start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/InfoApp.hpp" end --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/MainMenuApp.hpp" start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/MainMenuApp.hpp" end --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/ResetSpraysApp.hpp" start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/ResetSpraysApp.hpp" end --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/SprayConfigApp.hpp" start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/SprayConfigApp.hpp" end --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/AirFreshener.hpp" start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/AirFreshener.hpp" end --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/AnalogButton.hpp" start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/AnalogButton.hpp" end --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/DistanceSensor.hpp" start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/DistanceSensor.hpp" end --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/Lcd.hpp" start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/Lcd.hpp" end --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/MagnetSwitch.hpp" start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/MagnetSwitch.hpp" end --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/MotionSensor.hpp" start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/MotionSensor.hpp" end --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/RGBLed.hpp" start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/RGBLed.hpp" end --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/TemperatureSensor.hpp" start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/TemperatureSensor.hpp" end --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" end --*/
 
 #define EEPROM_DEFAULT 0
 
@@ -1449,7 +1235,7 @@ void AppEnv ::setup() {
     this->data->defaultApp = this->apps->infoApp;
 }
 
-/*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv2.cpp end --*/
+/*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.cpp end --*/
 /*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/AirFreshener.cpp start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/AirFreshener.hpp" start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/AirFreshener.hpp" end --*/
@@ -1462,6 +1248,8 @@ void AppEnv ::setup() {
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Debounce.hpp" end --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.hpp" start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.hpp" end --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/NoErrors.hpp" start --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/NoErrors.hpp" end --*/
 
 AirFreshener::AirFreshener(Pin outputPin) : Loopable() {
     this->outputPin = outputPin;
@@ -1498,11 +1286,11 @@ void AirFreshener::loop() {
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/App.hpp" end --*/
 
 void AnalogButton::onButtonPressed() {
-    // Serial.println("button pressed (from button)");
     if (appEnv->data->activeApp) {
         appEnv->data->activeApp->onButtonPressed(this);
     }
 }
+
 /*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/AnalogButton.cpp end --*/
 /*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/Lcd.cpp start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/Lcd.hpp" start --*/
@@ -1543,7 +1331,7 @@ void Lcd ::setLineText(int line, char* text, bool centered) {
 
     lcd->print(finalTxt);
 }
-void Lcd ::setText(char* texts[]) {
+void Lcd ::setText(char texts[2][17]) {
     assert_simple(texts, "must have text");
     setLineText(0, texts[0], true);
     setLineText(1, texts[1], true);
@@ -1551,7 +1339,7 @@ void Lcd ::setText(char* texts[]) {
 
 // TODO find error in this function
 template <typename T_App>
-void Lcd ::update(T_App* app, char* texts[2]) {
+void Lcd ::update(T_App* app, char texts[2][17]) {
     // Serial.println("updating lcd");
     if (appEnv->data->activeApp == app) {
         setText(texts);
@@ -1570,7 +1358,7 @@ void Lcd ::activateApp(T_App* app) {
 
     appEnv->data->activeApp = app;
     app->activate();
-}  // TODO creating app whenever we press a button?
+}
 /*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/Lcd.cpp end --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/LiquidCrystal.h" start --*/
 
@@ -1580,6 +1368,8 @@ void Lcd ::activateApp(T_App* app) {
 
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/AppEnv.hpp" end --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.hpp" start --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.hpp" end --*/
 
 // TODO: fix data leak!
 // static void MotionSensor_toggleMotion() {
@@ -1589,11 +1379,17 @@ void Lcd ::activateApp(T_App* app) {
 //     }
 // }
 
-MotionSensor::MotionSensor(Pin pin) {
-    // this->pin = pin;
-    // pinMode(pin, INPUT_PULLUP);
+MotionSensor::MotionSensor(Pin pin) : Loopable() {
+    this->pin = pin;
+    pinMode(pin, INPUT);
     // attachInterrupt(digitalPinToInterrupt(pin), MotionSensor_toggleMotion,
     //                 CHANGE);
+}
+
+void MotionSensor::loop() {
+    if (appEnv->funcs->isSensorsOn()) {
+        updateMotion();
+    }
 }
 
 void MotionSensor::updateMotion() {
@@ -1608,6 +1404,8 @@ void MotionSensor::updateMotion() {
     }
 }
 /*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Components/MotionSensor.cpp end --*/
+/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/EEPROM.h" start --*/
+
 /*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.cpp start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.hpp" start --*/
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.hpp" end --*/
@@ -1666,67 +1464,6 @@ Loopable::Loopable() { index = loopManager->connect(this); }
 
 void Loopable::loop() { Serial.println("default loop function"); }
 /*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Modules/Loopable.cpp end --*/
-/*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Packages/ColorUtils.cpp start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Packages/ColorUtils.hpp" start --*/
-/*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Packages/ColorUtils.hpp" end --*/
-
-RGB::RGB(unsigned char r, unsigned char g, unsigned char b) {
-    R = r;
-    G = g;
-    B = b;
-}
-
-bool RGB::Equals(RGB rgb) {
-    return (R == rgb.R) && (G == rgb.G) && (B == rgb.B);
-}
-
-bool HSL::Equals(HSL hsl) {
-    return (H == hsl.H) && (S == hsl.S) && (L == hsl.L);
-}
-
-HSL::HSL(int h, float s, float l) {
-    H = h;
-    S = s;
-    L = l;
-}
-
-static float HueToRGB(float v1, float v2, float vH) {
-    if (vH < 0) vH += 1;
-
-    if (vH > 1) vH -= 1;
-
-    if ((6 * vH) < 1) return (v1 + (v2 - v1) * 6 * vH);
-
-    if ((2 * vH) < 1) return v2;
-
-    if ((3 * vH) < 2) return (v1 + (v2 - v1) * ((2.0f / 3) - vH) * 6);
-
-    return v1;
-}
-
-static RGB HSLToRGB(HSL hsl) {
-    unsigned char r = 0;
-    unsigned char g = 0;
-    unsigned char b = 0;
-
-    if (hsl.S == 0) {
-        r = g = b = (unsigned char)(hsl.L * 255);
-    } else {
-        float v1, v2;
-        float hue = (float)hsl.H / 360;
-
-        v2 = (hsl.L < 0.5) ? (hsl.L * (1 + hsl.S))
-                           : ((hsl.L + hsl.S) - (hsl.L * hsl.S));
-        v1 = 2 * hsl.L - v2;
-
-        r = (unsigned char)(255 * HueToRGB(v1, v2, hue + (1.0f / 3)));
-        g = (unsigned char)(255 * HueToRGB(v1, v2, hue));
-        b = (unsigned char)(255 * HueToRGB(v1, v2, hue - (1.0f / 3)));
-    }
-
-    return RGB(r, g, b);
-}
-/*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Packages/ColorUtils.cpp end --*/
 /*-- File: /Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/main.cpp start --*/
 
 /*-- #include "/Users/mary/Documents/School/Interactive Tech/Asignment 1/main code/Apps/MainMenuApp.hpp" start --*/
@@ -1753,59 +1490,60 @@ static RGB HSLToRGB(HSL hsl) {
 // resistorOhms
 class AnalogBtnSet : public Loopable {
    private:
-    uint8_t pin;
+    Pin pin;
     static const int btnCount = 3;
     int startingVolts;
     int resistorKOhms;
     bool ready = true;
-    unsigned long debounceTime = 300;
+    DebounceTime debounceTime = 300;
     Debounce* debounce = new Debounce(&debounceTime);
     AnalogButton* btns[btnCount];  // WARNING: button count has been hardcoded
 
-    int getMaxVoltage(const int btnNum) {
-        int resistorsBfrBtn = btnNum + 1;
-        return (startingVolts * 100) - (resistorsBfrBtn * resistorKOhms * 100) +
-               resistorKOhms * 100;
-    }
-    int getMinVoltage(const int btnNum) { return getMaxVoltage(btnNum) - 100; }
+    int getMaxVoltage(const int btnNum);
+    int getMinVoltage(const int btnNum);
 
     void triggerButton(AnalogButton* btn);
 
    public:
     AnalogBtnSet(AnalogButton* btns[], int btnCount, Pin analogPin,
-                 const int startingVolts, const int resistorKOhms)
-        : Loopable() {
-        assert_int(this->btnCount == btnCount,
-                   "button count must be same as hard code", btnCount);
-        this->pin = analogPin;
-        this->startingVolts = startingVolts;
-        this->resistorKOhms = resistorKOhms;
-        for (int i = 0; i < btnCount; i++) {
-            this->btns[i] = btns[i];
-        }
-    }
+                 const int startingVolts, const int resistorKOhms);
 
     void loop();
 };
 
+// private:
+int AnalogBtnSet::getMaxVoltage(const int btnNum) {
+    int resistorsBfrBtn = btnNum + 1;
+    return (startingVolts * 100) - (resistorsBfrBtn * resistorKOhms * 100) +
+           resistorKOhms * 100;
+}
+
+int AnalogBtnSet::getMinVoltage(const int btnNum) {
+    return getMaxVoltage(btnNum) - 100;
+}
+
 void AnalogBtnSet::triggerButton(AnalogButton* btn) {
-    // if (debounce->isValid()) {
-
-    //     debounce->start();
-    // } else {
-    //     Serial.println("debounce not valid");
-    // }
-
     if (ready) {
         btn->onButtonPressed();
         ready = false;
     }
 }
 
+// public:
+AnalogBtnSet::AnalogBtnSet(AnalogButton* btns[], int btnCount, Pin analogPin,
+                           const int startingVolts, const int resistorKOhms)
+    : Loopable() {
+    assert_int(this->btnCount == btnCount,
+               "button count must be same as hard code", btnCount);
+    this->pin = analogPin;
+    this->startingVolts = startingVolts;
+    this->resistorKOhms = resistorKOhms;
+    for (int i = 0; i < btnCount; i++) {
+        this->btns[i] = btns[i];
+    }
+}
+
 void AnalogBtnSet::loop() {
-    // btnCount + 1 = no button pressed
-    // 0 = first button
-    // Serial.println("AnalogBtnSet loop");
     int voltageInput = analogRead(this->pin);
 
     // no button pressed

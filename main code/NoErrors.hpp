@@ -3,8 +3,21 @@
 // #ifndef NO_ERRORS_HPP
 // #define NO_ERRORS_HPP
 
-// #define NULL 0
+// #define uint8_t int
+
 // #define A0 0
+// #define A1 0
+// #define A2 0
+// #define A3 0
+// #define A4 0
+// #define A5 0
+// #define A6 0
+
+// #define NULL 0
+// #define OUTPUT 0
+// #define INPUT 0
+// #define HIGH 0
+// #define LOW 0
 
 // #include <iostream>
 // using namespace std;
@@ -35,6 +48,26 @@
 
 // SerialObj Serial;
 
+// void pinMode(uint8_t pin, int type) {}
+
+// void digitalWrite(uint8_t pin, int mode) {}
+
+// int digitalRead(int pin) {}
+
+// int millis() {}
+
 // int main() {}
+
+// int pulseIn(uint8_t pin, int out) {}
+
+// int analogWrite(int pin, int out) {}
+
+// class EEPROM_class {
+//    public:
+//     int get(int x, int y){};
+//     int put(int x, int y){};
+// };
+
+// EEPROM_class EEPROM;
 
 // #endif /* NO_ERRORS_HPP */

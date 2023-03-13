@@ -4,6 +4,7 @@
 #include "../Apps/ForceSprayApp.hpp"
 #include "../Modules/Debounce.hpp"
 #include "../Modules/Loopable.hpp"
+#include "../NoErrors.hpp"
 
 AirFreshener::AirFreshener(Pin outputPin) : Loopable() {
     this->outputPin = outputPin;

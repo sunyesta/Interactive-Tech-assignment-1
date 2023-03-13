@@ -1,6 +1,7 @@
 #include "MotionSensor.hpp"
 
 #include "../AppEnv.hpp"
+#include "../Modules/Loopable.hpp"
 
 // TODO: fix data leak!
 // static void MotionSensor_toggleMotion() {
@@ -10,11 +11,17 @@
 //     }
 // }
 
-MotionSensor::MotionSensor(Pin pin) {
-    // this->pin = pin;
-    // pinMode(pin, INPUT_PULLUP);
+MotionSensor::MotionSensor(Pin pin) : Loopable() {
+    this->pin = pin;
+    pinMode(pin, INPUT);
     // attachInterrupt(digitalPinToInterrupt(pin), MotionSensor_toggleMotion,
     //                 CHANGE);
+}
+
+void MotionSensor::loop() {
+    if (appEnv->funcs->isSensorsOn()) {
+        updateMotion();
+    }
 }
 
 void MotionSensor::updateMotion() {

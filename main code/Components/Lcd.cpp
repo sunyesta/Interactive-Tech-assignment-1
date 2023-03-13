@@ -31,7 +31,7 @@ void Lcd ::setLineText(int line, char* text, bool centered) {
 
     lcd->print(finalTxt);
 }
-void Lcd ::setText(char* texts[]) {
+void Lcd ::setText(char texts[2][17]) {
     assert_simple(texts, "must have text");
     setLineText(0, texts[0], true);
     setLineText(1, texts[1], true);
@@ -39,7 +39,7 @@ void Lcd ::setText(char* texts[]) {
 
 // TODO find error in this function
 template <typename T_App>
-void Lcd ::update(T_App* app, char* texts[2]) {
+void Lcd ::update(T_App* app, char texts[2][17]) {
     // Serial.println("updating lcd");
     if (appEnv->data->activeApp == app) {
         setText(texts);
@@ -58,4 +58,4 @@ void Lcd ::activateApp(T_App* app) {
 
     appEnv->data->activeApp = app;
     app->activate();
-}  // TODO creating app whenever we press a button?
+}

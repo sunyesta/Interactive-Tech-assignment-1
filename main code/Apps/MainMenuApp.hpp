@@ -4,7 +4,6 @@
 #define MAIN_MENU_APP_HPP
 
 #include "../Components/AnalogButton.hpp"
-#include "../Modules/StringUtils.hpp"
 #include "App.hpp"
 
 class MainMenuApp : public App {
@@ -15,8 +14,6 @@ class MainMenuApp : public App {
         void (*callback)();
 
         Option(char *text, void (*callbackFunc)()) {
-            //
-            // string_cpy(&(this->text), text);
             sprintf(this->text, "%s", text);
 
             this->callback = callback;
@@ -27,7 +24,7 @@ class MainMenuApp : public App {
 
     int itemIndex = 0;
     static const int optionCount = 4;
-    char *options[4];
+    char options[4][12];
 
     void displayMenuItem(char *op);
 
@@ -40,10 +37,10 @@ class MainMenuApp : public App {
 };
 
 MainMenuApp::MainMenuApp() : App() {
-    string_cpy(&options[0], "info app");
-    string_cpy(&options[1], "spray mode");
-    string_cpy(&options[2], "spray");
-    string_cpy(&options[3], "reset");
+    sprintf(options[0], "info app");
+    sprintf(options[1], "spray mode");
+    sprintf(options[2], "spray");
+    sprintf(options[3], "reset");
 }
 
 void MainMenuApp::displayMenuItem(char *op) { sprintf(texts[0], "%s", op); };

@@ -3,7 +3,9 @@
 #ifndef AIR_FRESHENER_HPP
 #define AIR_FRESHENER_HPP
 
+#include "../AppEnv.hpp"
 #include "../Modules/Loopable.hpp"
+
 class Debounce;
 
 class AirFreshener : public Loopable {

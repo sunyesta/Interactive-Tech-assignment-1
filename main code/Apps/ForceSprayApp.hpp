@@ -3,7 +3,7 @@
 #ifndef FORCE_SPRAY_APP
 #define FORCE_SPRAY_APP
 
-// #include "../Components/AirFreshener.hpp";
+#include "../Components/AirFreshener.hpp"
 #include "../Modules/Debounce.hpp";
 #include "../Modules/Loopable.hpp";
 #include "App.hpp";

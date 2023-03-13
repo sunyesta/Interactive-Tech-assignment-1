@@ -14,59 +14,60 @@
 // resistorOhms
 class AnalogBtnSet : public Loopable {
    private:
-    uint8_t pin;
+    Pin pin;
     static const int btnCount = 3;
     int startingVolts;
     int resistorKOhms;
     bool ready = true;
-    unsigned long debounceTime = 300;
+    DebounceTime debounceTime = 300;
     Debounce* debounce = new Debounce(&debounceTime);
     AnalogButton* btns[btnCount];  // WARNING: button count has been hardcoded
 
-    int getMaxVoltage(const int btnNum) {
-        int resistorsBfrBtn = btnNum + 1;
-        return (startingVolts * 100) - (resistorsBfrBtn * resistorKOhms * 100) +
-               resistorKOhms * 100;
-    }
-    int getMinVoltage(const int btnNum) { return getMaxVoltage(btnNum) - 100; }
+    int getMaxVoltage(const int btnNum);
+    int getMinVoltage(const int btnNum);
 
     void triggerButton(AnalogButton* btn);
 
    public:
     AnalogBtnSet(AnalogButton* btns[], int btnCount, Pin analogPin,
-                 const int startingVolts, const int resistorKOhms)
-        : Loopable() {
-        assert_int(this->btnCount == btnCount,
-                   "button count must be same as hard code", btnCount);
-        this->pin = analogPin;
-        this->startingVolts = startingVolts;
-        this->resistorKOhms = resistorKOhms;
-        for (int i = 0; i < btnCount; i++) {
-            this->btns[i] = btns[i];
-        }
-    }
+                 const int startingVolts, const int resistorKOhms);
 
     void loop();
 };
 
+// private:
+int AnalogBtnSet::getMaxVoltage(const int btnNum) {
+    int resistorsBfrBtn = btnNum + 1;
+    return (startingVolts * 100) - (resistorsBfrBtn * resistorKOhms * 100) +
+           resistorKOhms * 100;
+}
+
+int AnalogBtnSet::getMinVoltage(const int btnNum) {
+    return getMaxVoltage(btnNum) - 100;
+}
+
 void AnalogBtnSet::triggerButton(AnalogButton* btn) {
-    // if (debounce->isValid()) {
-
-    //     debounce->start();
-    // } else {
-    //     Serial.println("debounce not valid");
-    // }
-
     if (ready) {
         btn->onButtonPressed();
         ready = false;
     }
 }
 
+// public:
+AnalogBtnSet::AnalogBtnSet(AnalogButton* btns[], int btnCount, Pin analogPin,
+                           const int startingVolts, const int resistorKOhms)
+    : Loopable() {
+    assert_int(this->btnCount == btnCount,
+               "button count must be same as hard code", btnCount);
+    this->pin = analogPin;
+    this->startingVolts = startingVolts;
+    this->resistorKOhms = resistorKOhms;
+    for (int i = 0; i < btnCount; i++) {
+        this->btns[i] = btns[i];
+    }
+}
+
 void AnalogBtnSet::loop() {
-    // btnCount + 1 = no button pressed
-    // 0 = first button
-    // Serial.println("AnalogBtnSet loop");
     int voltageInput = analogRead(this->pin);
 
     // no button pressed

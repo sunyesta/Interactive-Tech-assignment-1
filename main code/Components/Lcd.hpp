@@ -5,6 +5,7 @@
 
 class LiquidCrystal;
 
+#include "../AppEnv.hpp"
 class App;
 
 class Lcd {
@@ -19,10 +20,10 @@ class Lcd {
     Lcd(Pin rs, Pin e, Pin db4, Pin db5, Pin db6, Pin db7);
 
     void setLineText(int line, char* text, bool centered);
-    void setText(char* texts[]);
+    void setText(char texts[2][17]);
     // TODO find error in this function
     template <typename T_App>
-    void update(T_App* app, char* texts[]);
+    void update(T_App* app, char texts[2][17]);
 
     template <typename T_App>
     void activateApp(T_App* app);

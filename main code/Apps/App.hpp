@@ -6,15 +6,12 @@
 #include "../AppEnv.hpp"
 #include "../Components/AnalogButton.hpp"
 #include "../Components/Lcd.hpp"
-#include "../Modules/StringUtils.hpp"
 #include "../NoErrors.hpp"
-
-// #include "../Temp.hpp"
 
 class App {
    protected:
-    char* texts[2];
-    void fireUpdate() { appEnv->lcd->update(this, texts); }
+    char texts[2][17];
+    void fireUpdate();
 
    public:
     App();
@@ -24,10 +21,13 @@ class App {
     virtual char* toString();
     virtual void onButtonPressed(AnalogButton* btn);
 };
+// protected
+void App::fireUpdate() { appEnv->lcd->update(this, texts); }
 
+// public
 App::App() {
-    string_cpy(&texts[0], "sixteen chars==1");
-    string_cpy(&texts[1], "sixteen chars==2");
+    sprintf(texts[0], "sixteen chars==1");
+    sprintf(texts[1], "sixteen chars==2");
 }
 
 void App::onButtonPressed(AnalogButton* btn) {

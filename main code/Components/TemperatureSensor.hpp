@@ -4,6 +4,7 @@
 #define TEMPERATURE_SENSO_HPP
 
 #include "../AppEnv.hpp"
+#include "../Apps/InfoApp.hpp"
 #include "../Modules/Debounce.hpp"
 #include "../Modules/Loopable.hpp"
 
@@ -15,7 +16,7 @@ class TemperatureSensor : public Loopable {
 
    public:
     TemperatureSensor(Pin analogPin) : Loopable() {
-        //
+        // Serial.println("testingaaaaaaaaaaaaaaaaaaaaaaaaa");
         this->pin = analogPin;
         debounce->start();
     }
@@ -29,7 +30,6 @@ class TemperatureSensor : public Loopable {
 
             appEnv->data->temperature = celcius;
             appEnv->apps->infoApp->updateTemperature(true);
-            // Serial.println(celcius);
             debounce->start();
         }
     }

@@ -13,11 +13,7 @@ class MotionSensor : public Loopable {
     Pin pin;
     MotionSensor(Pin pin);
 
-    void loop() {
-        // if (appEnv->funcs->isSensorsOn()) {
-        //     updateMotion();
-        // }
-    }
+    void loop();
 
     void updateMotion();
 };
